@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Selector – DevToolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* exact same CSS as gitignore.html, with the same variables and layout */
+        /* (copy the CSS block from gitignore.html here) */
+    </style>
+</head>
+<body>
+    <header>
+        <h1>License Selector</h1>
+    </header>
+    <div class="app-container">
+        <nav class="sidebar">
+            <a href="index.html" class="nav-btn" style="text-decoration:none;">← Home</a>
+            <button class="nav-btn active" disabled style="opacity:1; cursor:default;">⚖️ License Selector</button>
+        </nav>
+        <main class="content-area">
+            <h2>Choose a License</h2>
+            <div class="form-group">
+                <label for="license-select">Select License</label>
+                <select id="license-select"></select>
+            </div>
+            <div class="license-summary" id="license-summary">
+                <p>Select a license to see its summary and full text.</p>
+            </div>
+            <div class="preview-container">
+                <div class="preview-header">Full License Text</div>
+                <div class="preview-content"><textarea id="license-text" readonly></textarea></div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="LicenseModule.copyLicense()">📋 Copy License</button>
+                <button class="btn btn-secondary" onclick="LicenseModule.downloadLicense()">⬇️ Download LICENSE</button>
+            </div>
+        </main>
+    </div>
+    <script>
+        const LicenseModule = {
+            // licenses object and methods from the earlier full code block (copy that whole module)
+            licenses: { /* ... MIT, Apache, etc. ... */ },
+            init() { /* ... */ },
+            displayLicense() { /* ... */ },
+            copyLicense() { /* ... */ },
+            downloadLicense() { /* ... */ }
+        };
+        document.addEventListener('DOMContentLoaded', () => LicenseModule.init());
+    </script>
+</body>
+</html>
