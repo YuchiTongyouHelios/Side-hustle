@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>README Generator – DevToolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --sidebar-bg: #cc7000;
+            --accent: #ff8c00;
+            --accent-hover: #e67e00;
+            --content-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fff5e6;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--sidebar-bg);
+            padding: 1rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .app-container {
+            display: flex;
+            max-width: 1300px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem 1rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.8rem 1.2rem;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #fff0e0;
+            color: var(--accent);
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255,140,0,0.3);
+        }
+
+        .content-area {
+            flex: 1;
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            color: var(--sidebar-bg);
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+
+        .form-group { margin-bottom: 1.25rem; }
+        label { display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:var(--text-primary); }
+        input[type="text"], textarea, select {
+            width:100%; padding:0.8rem 1rem; border:2px solid var(--border-color); border-radius:0.75rem;
+            font-size:0.95rem; font-family:inherit; transition:0.2s; background:#f9fafb;
+        }
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,140,0,0.15); background:white;
+        }
+        textarea { resize:vertical; min-height:120px; }
+
+        .btn-group { display:flex; gap:1rem; margin-top:1.5rem; flex-wrap:wrap; }
+        .btn {
+            padding:0.7rem 1.6rem; border:none; border-radius:0.75rem; font-size:0.9rem; font-weight:600;
+            cursor:pointer; transition:0.2s; display:inline-flex; align-items:center; gap:0.4rem;
+        }
+        .btn-primary { background:var(--accent); color:white; box-shadow:0 4px 12px rgba(255,140,0,0.25); }
+        .btn-primary:hover { background:var(--accent-hover); }
+        .btn-secondary { background:white; color:var(--text-primary); border:2px solid var(--border-color); }
+        .btn-secondary:hover { background:#fff5e6; border-color:var(--accent); }
+
+        .preview-container { margin-top:2rem; border:2px solid var(--border-color); border-radius:0.75rem; overflow:hidden; }
+        .preview-header { background:#f9fafb; padding:0.75rem 1rem; font-weight:600; font-size:0.85rem; color:var(--text-secondary); }
+        .preview-content { padding:1.5rem; background:white; }
+
+        .markdown-body { line-height:1.6; }
+        .back-link { display:inline-block; margin-bottom:1rem; color:var(--accent); text-decoration:none; font-weight:600; }
+
+        @media (max-width:768px) {
+            .app-container { flex-direction:column; }
+            .sidebar { width:100%; flex-direction:row; overflow-x:auto; position:static; gap:0.5rem; }
+            .content-area { padding:1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>README Generator</h1>
+    </header>
+    <div class="app-container">
+        <nav class="sidebar">
+            <a href="index.html" class="nav-btn" style="text-decoration:none;">← Home</a>
+            <button class="nav-btn active" disabled style="opacity:1; cursor:default;">📄 README Generator</button>
+        </nav>
+        <main class="content-area">
+            <h2>Create your README</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                <div>
+                    <div class="form-group"><label>Project Name *</label><input type="text" id="readme-project-name" placeholder="My Awesome Project"></div>
+                    <div class="form-group"><label>Short Description *</label><input type="text" id="readme-description" placeholder="A brief description..."></div>
+                    <div class="form-group"><label>Features (comma separated)</label><input type="text" id="readme-features" placeholder="Feature 1, Feature 2"></div>
+                    <div class="form-group"><label>Tech Stack (comma separated)</label><input type="text" id="readme-tech-stack" placeholder="React, Node.js"></div>
+                    <div class="form-group"><label>Installation Steps</label><textarea id="readme-installation" placeholder="1. Clone the repo..."></textarea></div>
+                    <div class="form-group"><label>Usage</label><textarea id="readme-usage" placeholder="How to use..."></textarea></div>
+                    <div class="form-group"><label>License</label><select id="readme-license"><option value="MIT">MIT</option><option value="Apache 2.0">Apache 2.0</option><option value="GPL v3">GPL v3</option><option value="None">None</option></select></div>
+                    <div class="form-group"><label>GitHub Username (optional)</label><input type="text" id="readme-github-username" placeholder="your-username"></div>
+                    <div class="form-group"><label>Repository Name (optional)</label><input type="text" id="readme-github-repo" placeholder="your-repo"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="ReadmeModule.copyMarkdown()">📋 Copy Markdown</button>
+                        <button class="btn btn-secondary" onclick="ReadmeModule.downloadMarkdown()">⬇️ Download .md</button>
+                    </div>
+                </div>
+                <div>
+                    <div class="preview-container"><div class="preview-header">Live Preview</div><div class="preview-content markdown-body" id="readme-preview"></div></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        const ReadmeModule = {
+            init() {
+                const inputs = ['readme-project-name','readme-description','readme-features','readme-tech-stack','readme-installation','readme-usage','readme-license','readme-github-username','readme-github-repo'];
+                inputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.addEventListener('input', () => this.generatePreview());
+                });
+                this.generatePreview();
+            },
+            generatePreview() {
+                const projectName = document.getElementById('readme-project-name').value || 'Project Name';
+                const description = document.getElementById('readme-description').value || 'A brief description of your project.';
+                const features = document.getElementById('readme-features').value;
+                const techStack = document.getElementById('readme-tech-stack').value;
+                const installation = document.getElementById('readme-installation').value;
+                const usage = document.getElementById('readme-usage').value;
+                const license = document.getElementById('readme-license').value;
+                const githubUsername = document.getElementById('readme-github-username').value;
+                const githubRepo = document.getElementById('readme-github-repo').value;
+
+                let markdown = `# ${projectName}\n\n${description}\n\n`;
+                if(githubUsername && githubRepo) {
+                    markdown += `[![License](https://img.shields.io/badge/License-${encodeURIComponent(license)}-blue.svg)](https://opensource.org/licenses/${encodeURIComponent(license)})\n`;
+                    markdown += `[![GitHub issues](https://img.shields.io/github/issues/${githubUsername}/${githubRepo})](https://github.com/${githubUsername}/${githubRepo}/issues)\n`;
+                    markdown += `[![GitHub stars](https://img.shields.io/github/stars/${githubUsername}/${githubRepo})](https://github.com/${githubUsername}/${githubRepo}/stargazers)\n\n`;
+                }
+                if(features) {
+                    markdown += `## Features\n\n`;
+                    features.split(',').forEach(f => { if(f.trim()) markdown += `- ${f.trim()}\n`; });
+                    markdown += `\n`;
+                }
+                if(techStack) {
+                    markdown += `## Tech Stack\n\n`;
+                    techStack.split(',').forEach(t => { if(t.trim()) markdown += `- ${t.trim()}\n`; });
+                    markdown += `\n`;
+                }
+                if(installation) { markdown += `## Installation\n\n${installation}\n\n`; }
+                if(usage) { markdown += `## Usage\n\n${usage}\n\n`; }
+                if(license !== 'None') { markdown += `## License\n\nThis project is licensed under the ${license} License.\n`; }
+                document.getElementById('readme-preview').innerHTML = marked.parse(markdown);
+                this.currentMarkdown = markdown;
+            },
+            copyMarkdown() {
+                if(this.currentMarkdown) {
+                    navigator.clipboard.writeText(this.currentMarkdown).then(() => alert('Markdown copied!'));
+                }
+            },
+            downloadMarkdown() {
+                if(this.currentMarkdown) {
+                    const blob = new Blob([this.currentMarkdown], {type:'text/markdown'});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href=url; a.download='README.md';
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            }
+        };
+        document.addEventListener('DOMContentLoaded', () => ReadmeModule.init());
+    </script>
+</body>
+</html>
