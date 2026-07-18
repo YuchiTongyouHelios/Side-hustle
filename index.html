@@ -1,511 +1,502 @@
-     1	<!DOCTYPE html>
-     2	<html lang="en">
-     3	<head>
-     4	    <meta charset="UTF-8">
-     5	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     6	    <title>DevToolkit - Essential tools for developers</title>
-     7	    <link rel="preconnect" href="https://fonts.googleapis.com">
-     8	    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-     9	    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    10	    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    11	    <style>
-    12	        :root {
-    13	            --sidebar-bg: #1e1e2e;
-    14	            --content-bg: #ffffff;
-    15	            --accent: #6c63ff;
-    16	            --accent-hover: #5a52d5;
-    17	            --text-primary: #1f2937;
-    18	            --text-secondary: #6b7280;
-    19	            --border-color: #e5e7eb;
-    20	            --success: #10b981;
-    21	        }
-    22	
-    23	        * {
-    24	            margin: 0;
-    25	            padding: 0;
-    26	            box-sizing: border-box;
-    27	        }
-    28	
-    29	        body {
-    30	            font-family: 'Inter', sans-serif;
-    31	            background-color: #f3f4f6;
-    32	            color: var(--text-primary);
-    33	            min-height: 100vh;
-    34	            display: flex;
-    35	            flex-direction: column;
-    36	        }
-    37	
-    38	        /* Header */
-    39	        header {
-    40	            background: var(--content-bg);
-    41	            padding: 1rem 2rem;
-    42	            border-bottom: 1px solid var(--border-color);
-    43	            text-align: center;
-    44	        }
-    45	
-    46	        header h1 {
-    47	            font-size: 1.5rem;
-    48	            font-weight: 700;
-    49	            color: var(--sidebar-bg);
-    50	        }
-    51	
-    52	        header p {
-    53	            font-size: 0.875rem;
-    54	            color: var(--text-secondary);
-    55	            margin-top: 0.25rem;
-    56	        }
-    57	
-    58	        .privacy-note {
-    59	            font-size: 0.75rem;
-    60	            color: var(--accent);
-    61	            margin-top: 0.5rem;
-    62	            font-weight: 500;
-    63	        }
-    64	
-    65	        /* Main Layout */
-    66	        .app-container {
-    67	            display: flex;
-    68	            flex: 1;
-    69	            max-width: 1400px;
-    70	            width: 100%;
-    71	            margin: 0 auto;
-    72	            overflow: hidden;
-    73	        }
-    74	
-    75	        /* Sidebar */
-    76	        .sidebar {
-    77	            width: 250px;
-    78	            background: var(--sidebar-bg);
-    79	            color: white;
-    80	            padding: 2rem 1rem;
-    81	            display: flex;
-    82	            flex-direction: column;
-    83	            gap: 0.5rem;
-    84	        }
-    85	
-    86	        .nav-btn {
-    87	            background: transparent;
-    88	            border: none;
-    89	            color: #a1a1aa;
-    90	            padding: 0.75rem 1rem;
-    91	            text-align: left;
-    92	            cursor: pointer;
-    93	            border-radius: 0.5rem;
-    94	            font-size: 0.95rem;
-    95	            font-weight: 500;
-    96	            transition: all 0.2s;
-    97	        }
-    98	
-    99	        .nav-btn:hover {
-   100	            background: rgba(255, 255, 255, 0.1);
-   101	            color: white;
-   102	        }
-   103	
-   104	        .nav-btn.active {
-   105	            background: var(--accent);
-   106	            color: white;
-   107	        }
-   108	
-   109	        /* Content Area */
-   110	        .content-area {
-   111	            flex: 1;
-   112	            background: var(--content-bg);
-   113	            padding: 2rem;
-   114	            overflow-y: auto;
-   115	        }
-   116	
-   117	        .tab-content {
-   118	            display: none;
-   119	        }
-   120	
-   121	        .tab-content.active {
-   122	            display: block;
-   123	        }
-   124	
-   125	        h2 {
-   126	            font-size: 1.5rem;
-   127	            margin-bottom: 1.5rem;
-   128	            color: var(--sidebar-bg);
-   129	        }
-   130	
-   131	        /* Forms */
-   132	        .form-group {
-   133	            margin-bottom: 1.25rem;
-   134	        }
-   135	
-   136	        label {
-   137	            display: block;
-   138	            font-size: 0.875rem;
-   139	            font-weight: 500;
-   140	            margin-bottom: 0.5rem;
-   141	            color: var(--text-primary);
-   142	        }
-   143	
-   144	        input[type="text"],
-   145	        textarea,
-   146	        select {
-   147	            width: 100%;
-   148	            padding: 0.75rem;
-   149	            border: 1px solid var(--border-color);
-   150	            border-radius: 0.5rem;
-   151	            font-size: 0.95rem;
-   152	            font-family: inherit;
-   153	            transition: border-color 0.2s;
-   154	        }
-   155	
-   156	        input[type="text"]:focus,
-   157	        textarea:focus,
-   158	        select:focus {
-   159	            outline: none;
-   160	            border-color: var(--accent);
-   161	            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
-   162	        }
-   163	
-   164	        textarea {
-   165	            resize: vertical;
-   166	            min-height: 120px;
-   167	        }
-   168	
-   169	        .checkbox-group {
-   170	            display: flex;
-   171	            gap: 1.5rem;
-   172	            flex-wrap: wrap;
-   173	        }
-   174	
-   175	        .checkbox-item {
-   176	            display: flex;
-   177	            align-items: center;
-   178	            gap: 0.5rem;
-   179	        }
-   180	
-   181	        .checkbox-item input[type="checkbox"] {
-   182	            width: 1rem;
-   183	            height: 1rem;
-   184	            accent-color: var(--accent);
-   185	        }
-   186	
-   187	        /* Buttons */
-   188	        .btn-group {
-   189	            display: flex;
-   190	            gap: 1rem;
-   191	            margin-top: 1.5rem;
-   192	            flex-wrap: wrap;
-   193	        }
-   194	
-   195	        .btn {
-   196	            padding: 0.75rem 1.5rem;
-   197	            border: none;
-   198	            border-radius: 0.5rem;
-   199	            font-size: 0.95rem;
-   200	            font-weight: 500;
-   201	            cursor: pointer;
-   202	            transition: all 0.2s;
-   203	            display: inline-flex;
-   204	            align-items: center;
-   205	            gap: 0.5rem;
-   206	        }
-   207	
-   208	        .btn-primary {
-   209	            background: var(--accent);
-   210	            color: white;
-   211	        }
-   212	
-   213	        .btn-primary:hover {
-   214	            background: var(--accent-hover);
-   215	        }
-   216	
-   217	        .btn-secondary {
-   218	            background: #f3f4f6;
-   219	            color: var(--text-primary);
-   220	            border: 1px solid var(--border-color);
-   221	        }
-   222	
-   223	        .btn-secondary:hover {
-   224	            background: #e5e7eb;
-   225	        }
-   226	
-   227	        /* Preview Areas */
-   228	        .preview-container {
-   229	            margin-top: 2rem;
-   230	            border: 1px solid var(--border-color);
-   231	            border-radius: 0.5rem;
-   232	            overflow: hidden;
-   233	        }
-   234	
-   235	        .preview-header {
-   236	            background: #f9fafb;
-   237	            padding: 0.75rem 1rem;
-   238	            border-bottom: 1px solid var(--border-color);
-   239	            font-weight: 600;
-   240	            font-size: 0.875rem;
-   241	            color: var(--text-secondary);
-   242	        }
-   243	
-   244	        .preview-content {
-   245	            padding: 1.5rem;
-   246	            background: white;
-   247	        }
-   248	
-   249	        .preview-content.readonly-textarea {
-   250	            padding: 0;
-   251	        }
-   252	
-   253	        .preview-content.readonly-textarea textarea {
-   254	            border: none;
-   255	            border-radius: 0;
-   256	            min-height: 300px;
-   257	            resize: none;
-   258	        }
-   259	
-   260	        /* Markdown Styles */
-   261	        .markdown-body {
-   262	            line-height: 1.6;
-   263	        }
-   264	
-   265	        .markdown-body h1,
-   266	        .markdown-body h2,
-   267	        .markdown-body h3 {
-   268	            margin-top: 1.5rem;
-   269	            margin-bottom: 1rem;
-   270	            font-weight: 600;
-   271	        }
-   272	
-   273	        .markdown-body h1 {
-   274	            font-size: 2rem;
-   275	            border-bottom: 1px solid var(--border-color);
-   276	            padding-bottom: 0.5rem;
-   277	        }
-   278	
-   279	        .markdown-body h2 {
-   280	            font-size: 1.5rem;
-   281	        }
-   282	
-   283	        .markdown-body code {
-   284	            background: #f3f4f6;
-   285	            padding: 0.2rem 0.4rem;
-   286	            border-radius: 0.25rem;
-   287	            font-size: 0.875rem;
-   288	        }
-   289	
-   290	        .markdown-body pre {
-   291	            background: #1e1e2e;
-   292	            color: #f8f8f2;
-   293	            padding: 1rem;
-   294	            border-radius: 0.5rem;
-   295	            overflow-x: auto;
-   296	            margin: 1rem 0;
-   297	        }
-   298	
-   299	        .markdown-body pre code {
-   300	            background: transparent;
-   301	            padding: 0;
-   302	            color: inherit;
-   303	        }
-   304	
-   305	        .markdown-body ul,
-   306	        .markdown-body ol {
-   307	            margin-left: 1.5rem;
-   308	            margin-bottom: 1rem;
-   309	        }
-   310	
-   311	        .markdown-body blockquote {
-   312	            border-left: 4px solid var(--accent);
-   313	            padding-left: 1rem;
-   314	            color: var(--text-secondary);
-   315	            margin: 1rem 0;
-   316	        }
-   317	
-   318	        /* License Summary */
-   319	        .license-summary {
-   320	            background: #f9fafb;
-   321	            padding: 1rem;
-   322	            border-radius: 0.5rem;
-   323	            margin-bottom: 1.5rem;
-   324	            border-left: 4px solid var(--accent);
-   325	        }
-   326	
-   327	        .license-summary p {
-   328	            font-size: 0.95rem;
-   329	            line-height: 1.6;
-   330	        }
-   331	
-   332	        /* Footer */
-   333	        footer {
-   334	            background: var(--content-bg);
-   335	            padding: 1rem 2rem;
-   336	            border-top: 1px solid var(--border-color);
-   337	            text-align: center;
-   338	            font-size: 0.875rem;
-   339	            color: var(--text-secondary);
-   340	        }
-   341	
-   342	        /* Responsive */
-   343	        @media (max-width: 768px) {
-   344	            .app-container {
-   345	                flex-direction: column;
-   346	            }
-   347	
-   348	            .sidebar {
-   349	                width: 100%;
-   350	                padding: 1rem;
-   351	                flex-direction: row;
-   352	                overflow-x: auto;
-   353	                gap: 0.5rem;
-   354	            }
-   355	
-   356	            .nav-btn {
-   357	                white-space: nowrap;
-   358	                padding: 0.5rem 1rem;
-   359	            }
-   360	
-   361	            .content-area {
-   362	                padding: 1rem;
-   363	            }
-   364	
-   365	            .btn-group {
-   366	                flex-direction: column;
-   367	            }
-   368	
-   369	            .btn {
-   370	                width: 100%;
-   371	                justify-content: center;
-   372	            }
-   373	        }
-   374	    </style>
-   375	</head>
-   376	<body>
-   377	    <header>
-   378	        <h1>DevToolkit</h1>
-   379	        <p>Essential tools for developers · Built by Helios · PeerTutor</p>
-   380	        <p class="privacy-note">🔒 All data stays in your browser.</p>
-   381	    </header>
-   382	
-   383	    <div class="app-container">
-   384	        <nav class="sidebar">
-   385	            <button class="nav-btn active" data-tab="readme">README Generator</button>
-   386	            <button class="nav-btn" data-tab="gitignore">.gitignore Generator</button>
-   387	            <button class="nav-btn" data-tab="license">License Selector</button>
-   388	        </nav>
-   389	
-   390	        <main class="content-area">
-   391	            <!-- README Generator Tab -->
-   392	            <div id="readme" class="tab-content active">
-   393	                <h2>README Generator</h2>
-   394	                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-   395	                    <div>
-   396	                        <div class="form-group">
-   397	                            <label for="readme-project-name">Project Name *</label>
-   398	                            <input type="text" id="readme-project-name" placeholder="My Awesome Project">
-   399	                        </div>
-   400	                        <div class="form-group">
-   401	                            <label for="readme-description">Short Description *</label>
-   402	                            <input type="text" id="readme-description" placeholder="A brief description of your project">
-   403	                        </div>
-   404	                        <div class="form-group">
-   405	                            <label for="readme-features">Features (comma separated)</label>
-   406	                            <input type="text" id="readme-features" placeholder="Feature 1, Feature 2, Feature 3">
-   407	                        </div>
-   408	                        <div class="form-group">
-   409	                            <label for="readme-tech-stack">Tech Stack (comma separated)</label>
-   410	                            <input type="text" id="readme-tech-stack" placeholder="React, Node.js, MongoDB">
-   411	                        </div>
-   412	                        <div class="form-group">
-   413	                            <label for="readme-installation">Installation Steps</label>
-   414	                            <textarea id="readme-installation" placeholder="1. Clone the repository&#10;2. Install dependencies&#10;3. Run the app"></textarea>
-   415	                        </div>
-   416	                        <div class="form-group">
-   417	                            <label for="readme-usage">Usage</label>
-   418	                            <textarea id="readme-usage" placeholder="How to use your project..."></textarea>
-   419	                        </div>
-   420	                        <div class="form-group">
-   421	                            <label for="readme-license">License</label>
-   422	                            <select id="readme-license">
-   423	                                <option value="MIT">MIT</option>
-   424	                                <option value="Apache 2.0">Apache 2.0</option>
-   425	                                <option value="GPL v3">GPL v3</option>
-   426	                                <option value="None">None</option>
-   427	                            </select>
-   428	                        </div>
-   429	                        <div class="form-group">
-   430	                            <label for="readme-github-username">GitHub Username (optional)</label>
-   431	                            <input type="text" id="readme-github-username" placeholder="your-username">
-   432	                        </div>
-   433	                        <div class="form-group">
-   434	                            <label for="readme-github-repo">Repository Name (optional)</label>
-   435	                            <input type="text" id="readme-github-repo" placeholder="your-repo">
-   436	                        </div>
-   437	                        <div class="btn-group">
-   438	                            <button class="btn btn-primary" onclick="ReadmeModule.copyMarkdown()">
-   439	                                📋 Copy Markdown
-   440	                            </button>
-   441	                            <button class="btn btn-secondary" onclick="ReadmeModule.downloadMarkdown()">
-   442	                                ⬇️ Download .md
-   443	                            </button>
-   444	                        </div>
-   445	                    </div>
-   446	                    <div>
-   447	                        <div class="preview-container">
-   448	                            <div class="preview-header">Live Preview</div>
-   449	                            <div class="preview-content markdown-body" id="readme-preview"></div>
-   450	                        </div>
-   451	                    </div>
-   452	                </div>
-   453	            </div>
-   454	
-   455	            <!-- .gitignore Generator Tab -->
-   456	            <div id="gitignore" class="tab-content">
-   457	                <h2>.gitignore Generator</h2>
-   458	                <div class="form-group">
-   459	                    <label for="gitignore-language">Select Language/Framework</label>
-   460	                    <select id="gitignore-language"></select>
-   461	                </div>
-   462	                <div class="form-group">
-   463	                    <label>Additional OS Files</label>
-   464	                    <div class="checkbox-group">
-   465	                        <label class="checkbox-item">
-   466	                            <input type="checkbox" id="gitignore-windows" checked>
-   467	                            Windows
-   468	                        </label>
-   469	                        <label class="checkbox-item">
-   470	                            <input type="checkbox" id="gitignore-macos" checked>
-   471	                            macOS
-   472	                        </label>
-   473	                        <label class="checkbox-item">
-   474	                            <input type="checkbox" id="gitignore-linux">
-   475	                            Linux
-   476	                        </label>
-   477	                    </div>
-   478	                </div>
-   479	                <div class="preview-container">
-   480	                    <div class="preview-header">Generated .gitignore</div>
-   481	                    <div class="preview-content readonly-textarea">
-   482	                        <textarea id="gitignore-output" readonly></textarea>
-   483	                    </div>
-   484	                </div>
-   485	                <div class="btn-group">
-   486	                    <button class="btn btn-primary" onclick="GitignoreModule.copyToClipboard()">
-   487	                        📋 Copy to Clipboard
-   488	                    </button>
-   489	                    <button class="btn btn-secondary" onclick="GitignoreModule.downloadGitignore()">
-   490	                        ⬇️ Download .gitignore
-   491	                    </button>
-   492	                </div>
-   493	            </div>
-   494	
-   495	            <!-- License Selector Tab -->
-   496	            <div id="license" class="tab-content">
-   497	                <h2>License Selector</h2>
-   498	                <div class="form-group">
-   499	                    <label for="license-select">Select License</label>
-   500	                    <select id="license-select"></select>
-   501	                </div>
-   502	                <div class="license-summary" id="license-summary">
-   503	                    <p>Select a license to see its sum<response clipped><NOTE>Due to the max output limit, only part of this file has been shown to you. You should retry this tool after you have searched inside the file with `grep -n` in order to find the line numbers of what you are looking for.</NOTE>
-The file exists but was truncated. Let me view the rest of it:
-Shell
-$ wc -l /workspace/devtoolkit.html && tail -n +500 /workspace/devtoolkit.html
-$ wc -l /workspace/devtoolkit.html && tail -n +500 /workspace/devtoolkit.html
-1978 /workspace/devtoolkit.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevToolkit - Essential tools for developers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --sidebar-bg: #1e1e2e;
+            --content-bg: #ffffff;
+            --accent: #6c63ff;
+            --accent-hover: #5a52d5;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--content-bg);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--sidebar-bg);
+        }
+
+        header p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .privacy-note {
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #a1a1aa;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            background: var(--content-bg);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--sidebar-bg);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            accent-color: var(--accent);
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        /* Preview Areas */
+        .preview-container {
+            margin-top: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .preview-header {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .preview-content {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .preview-content.readonly-textarea {
+            padding: 0;
+        }
+
+        .preview-content.readonly-textarea textarea {
+            border: none;
+            border-radius: 0;
+            min-height: 300px;
+            resize: none;
+        }
+
+        /* Markdown Styles */
+        .markdown-body {
+            line-height: 1.6;
+        }
+
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .markdown-body h1 {
+            font-size: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .markdown-body h2 {
+            font-size: 1.5rem;
+        }
+
+        .markdown-body code {
+            background: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .markdown-body pre {
+            background: #1e1e2e;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .markdown-body pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .markdown-body ul,
+        .markdown-body ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            color: var(--text-secondary);
+            margin: 1rem 0;
+        }
+
+        /* License Summary */
+        .license-summary {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .license-summary p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--content-bg);
+            padding: 1rem 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 0.5rem;
+            }
+
+            .nav-btn {
+                white-space: nowrap;
+                padding: 0.5rem 1rem;
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DevToolkit</h1>
+        <p>Essential tools for developers · Built by Helios · PeerTutor</p>
+        <p class="privacy-note">🔒 All data stays in your browser.</p>
+    </header>
+
+    <div class="app-container">
+        <nav class="sidebar">
+            <button class="nav-btn active" data-tab="readme">README Generator</button>
+            <button class="nav-btn" data-tab="gitignore">.gitignore Generator</button>
+            <button class="nav-btn" data-tab="license">License Selector</button>
+        </nav>
+
+        <main class="content-area">
+            <!-- README Generator Tab -->
+            <div id="readme" class="tab-content active">
+                <h2>README Generator</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <div class="form-group">
+                            <label for="readme-project-name">Project Name *</label>
+                            <input type="text" id="readme-project-name" placeholder="My Awesome Project">
+                        </div>
+                        <div class="form-group">
+                            <label for="readme-description">Short Description *</label>
+                            <input type="text" id="readme-description" placeholder="A brief description of your project">
+                        </div>
+                        <div class="form-group">
+                            <label for="readme-features">Features (comma separated)</label>
+                            <input type="text" id="readme-features" placeholder="Feature 1, Feature 2, Feature 3">
+                        </div>
+                        <div class="form-group">
+                            <label for="readme-tech-stack">Tech Stack (comma separated)</label>
+                            <input type="text" id="readme-tech-stack" placeholder="React, Node.js, MongoDB">
+                        </div>
+                        <div class="form-group">
+                            <label for="readme-installation">Installation Steps</label>
+                            <textarea id="readme-installation" placeholder="1. Clone the repository&#10;2. Install dependencies&#10;3. Run the app"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="readme-usage">Usage</label>
+                            <textarea id="readme-usage" placeholder="How to use your project..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="readme-license">License</label>
+                            <select id="readme-license">
+                                <option value="MIT">MIT</option>
+                                <option value="Apache 2.0">Apache 2.0</option>
+                                <option value="GPL v3">GPL v3</option>
+                                <option value="None">None</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="readme-github-username">GitHub Username (optional)</label>
+                            <input type="text" id="readme-github-username" placeholder="your-username">
+                        </div>
+                        <div class="form-group">
+                            <label for="readme-github-repo">Repository Name (optional)</label>
+                            <input type="text" id="readme-github-repo" placeholder="your-repo">
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="ReadmeModule.copyMarkdown()">
+                                📋 Copy Markdown
+                            </button>
+                            <button class="btn btn-secondary" onclick="ReadmeModule.downloadMarkdown()">
+                                ⬇️ Download .md
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="preview-container">
+                            <div class="preview-header">Live Preview</div>
+                            <div class="preview-content markdown-body" id="readme-preview"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- .gitignore Generator Tab -->
+            <div id="gitignore" class="tab-content">
+                <h2>.gitignore Generator</h2>
+                <div class="form-group">
+                    <label for="gitignore-language">Select Language/Framework</label>
+                    <select id="gitignore-language"></select>
+                </div>
+                <div class="form-group">
+                    <label>Additional OS Files</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="gitignore-windows" checked>
+                            Windows
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="gitignore-macos" checked>
+                            macOS
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="gitignore-linux">
+                            Linux
+                        </label>
+                    </div>
+                </div>
+                <div class="preview-container">
+                    <div class="preview-header">Generated .gitignore</div>
+                    <div class="preview-content readonly-textarea">
+                        <textarea id="gitignore-output" readonly></textarea>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="GitignoreModule.copyToClipboard()">
+                        📋 Copy to Clipboard
+                    </button>
+                    <button class="btn btn-secondary" onclick="GitignoreModule.downloadGitignore()">
+                        ⬇️ Download .gitignore
+                    </button>
+                </div>
+            </div>
+
+            <!-- License Selector Tab -->
+            <div id="license" class="tab-content">
+                <h2>License Selector</h2>
+                <div class="form-group">
+                    <label for="license-select">Select License</label>
                     <select id="license-select"></select>
                 </div>
                 <div class="license-summary" id="license-summary">
@@ -528,9 +519,11 @@ $ wc -l /workspace/devtoolkit.html && tail -n +500 /workspace/devtoolkit.html
             </div>
         </main>
     </div>
+
     <footer>
         Essential tools for developers · Built by Helios · PeerTutor
     </footer>
+
     <script>
         // Tab Navigation Module
         const TabModule = {
@@ -548,6 +541,7 @@ $ wc -l /workspace/devtoolkit.html && tail -n +500 /workspace/devtoolkit.html
                 });
             }
         };
+
         // README Generator Module
         const ReadmeModule = {
             init() {
@@ -580,14 +574,17 @@ $ wc -l /workspace/devtoolkit.html && tail -n +500 /workspace/devtoolkit.html
                 const license = document.getElementById('readme-license').value;
                 const githubUsername = document.getElementById('readme-github-username').value;
                 const githubRepo = document.getElementById('readme-github-repo').value;
+
                 let markdown = `# ${projectName}\n\n`;
                 markdown += `${description}\n\n`;
+
                 // Shields
                 if (githubUsername && githubRepo) {
                     markdown += `[![License](https://img.shields.io/badge/License-${encodeURIComponent(license)}-blue.svg)](https://opensource.org/licenses/${encodeURIComponent(license)})\n`;
                     markdown += `[![GitHub issues](https://img.shields.io/github/issues/${githubUsername}/${githubRepo})](https://github.com/${githubUsername}/${githubRepo}/issues)\n`;
                     markdown += `[![GitHub stars](https://img.shields.io/github/stars/${githubUsername}/${githubRepo})](https://github.com/${githubUsername}/${githubRepo}/stargazers)\n\n`;
                 }
+
                 // Features
                 if (features) {
                     markdown += `## Features\n\n`;
@@ -596,6 +593,7 @@ $ wc -l /workspace/devtoolkit.html && tail -n +500 /workspace/devtoolkit.html
                     });
                     markdown += `\n`;
                 }
+
                 // Tech Stack
                 if (techStack) {
                     markdown += `## Tech Stack\n\n`;
@@ -604,24 +602,29 @@ $ wc -l /workspace/devtoolkit.html && tail -n +500 /workspace/devtoolkit.html
                     });
                     markdown += `\n`;
                 }
+
                 // Installation
                 if (installation) {
                     markdown += `## Installation\n\n`;
                     markdown += `${installation}\n\n`;
                 }
+
                 // Usage
                 if (usage) {
                     markdown += `## Usage\n\n`;
                     markdown += `${usage}\n\n`;
                 }
+
                 // License
                 if (license !== 'None') {
                     markdown += `## License\n\n`;
                     markdown += `This project is licensed under the ${license} License.\n`;
                 }
+
                 // Render preview
                 const previewEl = document.getElementById('readme-preview');
                 previewEl.innerHTML = marked.parse(markdown);
+
                 // Store raw markdown for copy/download
                 this.currentMarkdown = markdown;
             },
@@ -648,6 +651,7 @@ $ wc -l /workspace/devtoolkit.html && tail -n +500 /workspace/devtoolkit.html
                 }
             }
         };
+
         // .gitignore Generator Module
         const GitignoreModule = {
             templates: {
@@ -1325,11 +1329,12 @@ Temporary Items
                 }
             }
         };
+
         // License Selector Module
         const LicenseModule = {
             licenses: {
                 'MIT': {
-                    summary: 'The MIT License is a permissive license that lets people do anything they want with your code as long as they provide attribution back to you and don't hold you liable. It's one of the most popular open-source licenses.',
+                    summary: 'The MIT License is a permissive license that lets people do anything they want with your code as long as they provide attribution back to you and don\'t hold you liable. It\'s one of the most popular open-source licenses.',
                     text: `MIT License
 Copyright (c) [year] [fullname]
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1698,6 +1703,7 @@ For more information, please refer to <https://unlicense.org/>`
                 }
             }
         };
+
         // Initialize all modules
         document.addEventListener('DOMContentLoaded', () => {
             TabModule.init();
